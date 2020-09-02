@@ -10,8 +10,11 @@ public class Chaser : MonoBehaviour
     NavMeshAgent agent;
     Animator animator;
 
+    Enemy enemy;
+
     void Start()
     {
+        enemy = GetComponent<Enemy>();
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
     }
@@ -26,22 +29,37 @@ public class Chaser : MonoBehaviour
             if (agent.remainingDistance >= 0.5f)
             {
                 animator.SetBool(Constants.IS_WALKING, true);
+                enemy.PlaySound();
             }
             else
             {
                 animator.SetBool(Constants.IS_WALKING, false);
+                enemy.StopSound();
             }
+        }
+        else {
+            agent.SetDestination(transform.position);
+            enemy.StopSound();
         }
         if (agent.velocity.magnitude <= 0.1f)
         {
             animator.SetBool(Constants.IS_WALKING, false);
+            enemy.StopSound();
         }
+
     }
 
     private bool ShouldChase()
     {
-        float distance = Vector3.Distance(transform.position, target.position);
-        return distance < 10.0f;
+        if (GameManager.Instance.IsGameRunning())
+        {
+            float distance = Vector3.Distance(transform.position, target.position);
+            return distance < 13.0f;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void SetTarget(Transform target)

@@ -82,6 +82,17 @@ public class Spawner : MonoBehaviour
         dictionary[tag].Enqueue(obj);
     }
 
+    public int GetActiveEnemyCount() {
+        Pool enemyPool = pools[0];
+        foreach (Pool p in pools) {
+            if (p.tag == poolTag.ENEMY) {
+                enemyPool = p;
+            }
+        }
+
+        return enemyPool.size - dictionary[poolTag.ENEMY].Count;
+    }
+
     private bool isPoolEmpty(poolTag tag)
     {
         return dictionary[tag].Count <= 0;
